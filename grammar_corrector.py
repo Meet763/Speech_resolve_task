@@ -1,14 +1,12 @@
 import requests
-import os
-from dotenv import load_dotenv
+import streamlit as st
 
 # Load environment variables from .env file
-load_dotenv()
 
 def correct_grammar(user_sentence):
     # Azure OpenAI connection details
-    azure_openai_key = os.getenv('AZURE_OPENAI_API_KEY')  # Ensure the key is set in your .env
-    azure_openai_endpoint = os.getenv('AZURE_OPENAI_ENDPOINT')  # Ensure the endpoint is set in your .env
+    azure_openai_key = st.secrets["openai"]["api_key"]  # Ensure the key is set in your .env
+    azure_openai_endpoint = st.secrets["openai"]["api_endpoint"]  # Ensure the endpoint is set in your .env
 
     if azure_openai_key and azure_openai_endpoint:
         if user_sentence:  # Check if the input sentence is not empty
