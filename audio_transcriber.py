@@ -4,17 +4,32 @@ from google.cloud import speech
 from pydub import AudioSegment
 import tempfile
 import streamlit as st
+import json
 
 # Access the credentials from Streamlit Secrets Manager
 google_credentials = st.secrets["google"]["speech_to_text_key"]
 
+# Check if the credentials are valid JSON
+try:
+    credentials_dict = json.loads(google_credentials)
+except json.JSONDecodeError as e:
+    st.error(f"Failed to decode JSON. Please check your secrets.toml file. Error: {e}")
+    raise e
+
 # Use a temporary directory for file storage
 temp_dir = tempfile.TemporaryDirectory()
 
-# Use Streamlit's secrets manager to store the credentials temporarily
-with tempfile.NamedTemporaryFile(delete=False, mode="w") as temp_file:
+# Set the desired file name
+temp_file_name = "speech_to_text.json"
+
+# Create the full path for the temp file
+temp_file_path = os.path.join(temp_dir.name, temp_file_name)
+
+# Write the credentials to the file
+with open(temp_file_path, "w") as temp_file:
     temp_file.write(google_credentials)
     temp_file_path = temp_file.name
+    
 
 # Set the environment variable for the Google Cloud credentials
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = temp_file_path  # Use your path here

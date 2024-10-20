@@ -7,6 +7,10 @@ def correct_grammar(user_sentence):
     # Azure OpenAI connection details
     azure_openai_key = st.secrets["openai"]["api_key"]  # Ensure the key is set in your .env
     azure_openai_endpoint = st.secrets["openai"]["api_endpoint"]  # Ensure the endpoint is set in your .env
+    
+     # Check if both API key and endpoint are provided
+    if not azure_openai_key or not azure_openai_endpoint:
+        st.write("API key or endpoint missing. Please check your Streamlit secrets.")
 
     if azure_openai_key and azure_openai_endpoint:
         if user_sentence:  # Check if the input sentence is not empty
