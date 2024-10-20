@@ -1,3 +1,5 @@
 venv/
 .env
 __pycache__
+speech_to_text.json
+text-to-speech.json
