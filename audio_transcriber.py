@@ -2,6 +2,10 @@ import io
 import os
 from google.cloud import speech
 from pydub import AudioSegment
+import tempfile
+
+# Use a temporary directory for file storage
+temp_dir = tempfile.TemporaryDirectory()
 
 # Set the environment variable for the Google Cloud credentials
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"D:\NODE\internshal_task - Copy\speech_to_text.json"  # Use your path here
@@ -12,13 +16,14 @@ def generate_text(input_file):
     # Convert stereo audio to mono
     audio = AudioSegment.from_wav(input_file)
     mono_audio = audio.set_channels(1)  # Convert to mono
-    mono_audio.export("temp_mono_audio.wav", format="wav")  # Save as temporary WAV
+    temp_mono_audio_path = os.path.join(temp_dir.name, "temp_mono_audio.wav")
+    mono_audio.export(temp_mono_audio_path, format="wav")  # Save as temporary WAV
 
     # Create a speech client
     client = speech.SpeechClient()
 
     # Read the mono audio file
-    with io.open("temp_mono_audio.wav", "rb") as audio_file:
+    with io.open(temp_mono_audio_path, "rb") as audio_file:
         content = audio_file.read()
         audio = speech.RecognitionAudio(content=content)
 
