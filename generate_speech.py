@@ -1,8 +1,18 @@
 import os
 from google.cloud import texttospeech
+import streamlit as st
+import tempfile
+
+# Use the credentials stored in the Streamlit Secrets Manager
+google_credentials = st.secrets["google"]["text_to_speech_key"]
+
+# Create a temporary directory to store the credentials
+with tempfile.NamedTemporaryFile(delete=False, mode="w") as temp_file:
+    temp_file.write(google_credentials)
+    temp_file_path = temp_file.name
 
 # Set the environment variable for the Google Cloud credentials
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"D:\NODE\internshal_task - Copy\text-to-speech.json"   # Use your path here
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = temp_file_path   # Use your path here
 
 def generate_speech(text_input, output_file="output.mp3"):
     """Generate speech from text using Google Text-to-Speech API and save it as an audio file."""

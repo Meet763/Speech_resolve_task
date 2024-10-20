@@ -11,3 +11,5 @@ __pycache__/
 # Ignore Google Cloud credentials
 speech_to_text.json
 text-to-speech.json
+
+secret.toml

@@ -3,12 +3,21 @@ import os
 from google.cloud import speech
 from pydub import AudioSegment
 import tempfile
+import streamlit as st
+
+# Access the credentials from Streamlit Secrets Manager
+google_credentials = st.secrets["google"]["speech_to_text_key"]
 
 # Use a temporary directory for file storage
 temp_dir = tempfile.TemporaryDirectory()
 
+# Use Streamlit's secrets manager to store the credentials temporarily
+with tempfile.NamedTemporaryFile(delete=False, mode="w") as temp_file:
+    temp_file.write(google_credentials)
+    temp_file_path = temp_file.name
+
 # Set the environment variable for the Google Cloud credentials
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"D:\NODE\internshal_task - Copy\speech_to_text.json"  # Use your path here
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = temp_file_path  # Use your path here
 
 def generate_text(input_file):
     """Convert audio to mono and transcribe it using Google Speech-to-Text API."""
